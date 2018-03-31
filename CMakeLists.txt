@@ -10,20 +10,21 @@ if("${PASS_LIBS_DIR}" STREQUAL "")
   return()
 endif()
 
-# See https://github.com/gussmith23/llvm-benchmarks
-# and https://github.com/gussmith23/test-suite/commit/b39d483ae23f685f50af8535761d1ce0bea7cf4a
 set(BENCHMARKS_DIR "" CACHE PATH "Root directory to search for monolithic .bc files") 
 if("${BENCHMARKS_DIR}" STREQUAL "")
   message(FATAL_ERROR "BENCHMARKS_DIR unset")
   return()
 endif()
 
-if(NOT all_benchmarks)
-  message(STATUS "Collecting benchmarks...")
-  file(GLOB_RECURSE all_benchmarks "${BENCHMARKS_DIR}/*preopt*.bc")
-  list(LENGTH all_benchmarks num_benchmarks)
-  message(STATUS "Found ${num_benchmarks} benchmarks.")
-endif()
+# TODO finding this not too useful for now.
+# See https://github.com/gussmith23/llvm-benchmarks
+# and https://github.com/gussmith23/test-suite/commit/b39d483ae23f685f50af8535761d1ce0bea7cf4a
+#if(NOT all_benchmarks)
+#  message(STATUS "Collecting benchmarks...")
+#  file(GLOB_RECURSE all_benchmarks "${BENCHMARKS_DIR}/*preopt*.bc")
+#  list(LENGTH all_benchmarks num_benchmarks)
+#  message(STATUS "Found ${num_benchmarks} benchmarks.")
+#endif()
 
 # Use this function to create a new group of benchmarks to be run.
 # target_name: name of the target
@@ -33,7 +34,13 @@ endif()
 # pass_lib: the library containing the pass, to be loaded into opt via -load.
 #   Use the variable PASS_LIBS_DIR to refer to the folder containing the pass
 #   libraries.
-function(add_benchmark_group target_name benchmarks_filepaths pass_flag pass_lib)
+function(add_benchmark_group 
+    target_name 
+    benchmarks_filepaths 
+    pass_flag 
+    pass_lib
+    summarizer_script # A script which generates a summary output file
+    )
   set(benchmark_outputs "") 
   foreach(benchmark_filepath ${benchmarks_filepaths})
     get_filename_component(benchmark_filename ${benchmark_filepath} NAME)
@@ -44,10 +51,31 @@ function(add_benchmark_group target_name benchmarks_filepaths pass_flag pass_lib
                                   > "${output_filename}" 2>/dev/null)
     list(APPEND benchmark_outputs ${output_filename})
   endforeach()
-  add_custom_target(${target_name}
+  add_custom_target("${target_name}_results" 
                     DEPENDS ${benchmark_outputs}
                             ${pass_lib}
                             ${benchmark_filepaths})
+  if(NOT "${summarizer_script}" STREQUAL "")
+    # I really don't think thisi s the best way to do this
+    set(summary_filename "${target_name}_summary.txt")
+    add_custom_command(OUTPUT "${summary_filename}"
+                        DEPENDS "${benchmark_outputs}"
+                        COMMAND python "${summarizer_script}" ${benchmark_outputs} 
+                                  > "${summary_filename}")
+    add_custom_target("${target_name}_summary" DEPENDS "${summary_filename}")
+  endif()
+  
+  # TODO definitely a cleaner way to do this.
+  # If we're generating a summary, the main target can depend only on the
+  # summary. Otherwise, we depend on the results.
+  if(NOT "${summarizer_script}" STREQUAL "")
+    add_custom_target(${target_name}
+                      DEPENDS "${target_name}_summary")
+  else()
+    add_custom_target(${target_name}
+                      DEPENDS "${target_name}_results")
+  endif()  
 endfunction(add_benchmark_group)
 
-add_subdirectory(./2018-3-30-test-suite-precodegen-find-ld-ld-op-st)
+add_subdirectory(./multisource-applications-find-ld-ld-op-st)
+add_subdirectory(./multisource-benchmarks-find-ld-ld-op-st)
