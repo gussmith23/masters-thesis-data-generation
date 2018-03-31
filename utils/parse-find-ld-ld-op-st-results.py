@@ -56,6 +56,28 @@ def parse_find_ld_ld_op_st_results(lines):
             'two_immediate_operands' : two_immediate_operands, 
             'immediate_type_hist' : immediate_type_hist }
 
+# histogram: either 'opcode_hist', 'operand_opcode_hist', or
+# 'immediate_type_hist'
+# ignore_columns: a set of columns to ignore, if seen.
+def print_histogram_latex(data, histogram, benchmarks, ignore_columns=set()):
+    # create column names
+    col_headings = set()
+    for name in benchmarks:
+       col_headings.update(data[name][histogram].keys())
+    col_headings = sorted(list(col_headings.difference(ignore_columns)))
+
+    print('&' + '&'.join(col_headings) + '\\\\')
+
+    for name in benchmarks:
+        entries = []
+        for heading in col_headings:
+            try:
+                count = data[name][histogram][heading]
+            except KeyError:
+                count = 0
+            entries.append(count)
+        print(os.path.basename(name).split('.')[0] + '&' + '&'.join(map(lambda c: str(c) if c>0 else '', entries)) + '\\\\')
+
 # {filename : hist, ...}
 data = {}
 
@@ -63,27 +85,18 @@ for filename in sys.argv[1:]:
     with open(filename) as f:
         data[filename] = parse_find_ld_ld_op_st_results(f.readlines())
 
+# Pick the 10 benchmarks we'll use by finding the benchmarks with the greatest
+# number of PIM patterns (calculated in a roundabout way, unfortunately.
+# probably should have included that number in the summary results...)
 top10 = sorted(data.keys(), 
                 key = lambda filename:
                         sum(data[filename]['opcode_hist'].values()),
                         reverse = True)[0:10]
 
-## print latex table format
-
-# create column names
-col_headings = set()
-for name in top10:
-   col_headings.update(data[name]['opcode_hist'].keys())
-col_headings = sorted(list(col_headings))
-
-print('&' + '&'.join(col_headings) + '\\\\')
-
-for name in top10:
-    entries = []
-    for heading in col_headings:
-        try:
-            count = data[name]['opcode_hist'][heading]
-        except KeyError:
-            count = 0
-        entries.append(count)
-    print(os.path.basename(name).split('.')[0] + '&' + '&'.join(map(lambda c: str(c) if c>0 else '', entries)) + '\\\\')
+print("Opcode histogram:")
+print_histogram_latex(data, 'opcode_hist', top10)
+print("\nOperand opcode histogram:")
+print_histogram_latex(data, 'operand_opcode_hist', top10)
+#set(["invoke","select","phi","call","fptosi","fptoui","ptrtoint","shl","srem","urem"]))
+print("\nImmediate type histogram:")
+print_histogram_latex(data, 'immediate_type_hist', top10)

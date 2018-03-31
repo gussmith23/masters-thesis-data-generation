@@ -62,7 +62,9 @@ function(add_benchmark_group
                         DEPENDS "${benchmark_outputs}"
                         COMMAND python "${summarizer_script}" ${benchmark_outputs} 
                                   > "${summary_filename}")
-    add_custom_target("${target_name}_summary" DEPENDS "${summary_filename}")
+    add_custom_target("${target_name}_summary" 
+                      DEPENDS "${summary_filename}" 
+                              "${summarizer_script}")
   endif()
   
   # TODO definitely a cleaner way to do this.
