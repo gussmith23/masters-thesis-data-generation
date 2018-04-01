@@ -81,3 +81,7 @@ endfunction(add_benchmark_group)
 
 add_subdirectory(./multisource-applications-find-ld-ld-op-st)
 add_subdirectory(./multisource-benchmarks-find-ld-ld-op-st)
+
+add_subdirectory(./multisource-applications-all-find-pim-subgraphs)
+add_subdirectory(./multisource-applications-some-find-pim-subgraphs)
+add_subdirectory(./multisource-benchmarks-all-find-pim-subgraphs)
