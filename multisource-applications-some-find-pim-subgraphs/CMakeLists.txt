@@ -14,5 +14,6 @@ add_benchmark_group("multisource-applications-some-find-pim-subgraphs"
                     "${multisource_applications}"
                     "-find-pim-subgraphs"
                     "${PASS_LIBS_DIR}/libPimSubgraphs.so"
+                    ""
                     "") # TODO no parser for now.
 

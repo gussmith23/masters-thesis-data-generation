@@ -59,11 +59,14 @@ set(multisource_applications_c
 # pass_lib: the library containing the pass, to be loaded into opt via -load.
 #   Use the variable PASS_LIBS_DIR to refer to the folder containing the pass
 #   libraries.
+# extra_flags: Extra flags to pass to opt. These can be used to send flags to
+#   your pass.
 function(add_benchmark_group 
     target_name 
     benchmarks_filepaths 
     pass_flag 
     pass_lib
+    extra_flags 
     summarizer_script # A script which generates a summary output file
     )
   set(benchmark_outputs "") 
@@ -72,7 +75,8 @@ function(add_benchmark_group
     set(output_filename "${benchmark_filename}.out.txt")
     add_custom_command(OUTPUT ${output_filename}
                         COMMAND ${LLVM_TOOLS_BINARY_DIR}/opt -load "${pass_lib}" 
-                                "${pass_flag}" -analyze "${benchmark_filepath}" 
+                                "${pass_flag}" -analyze "${benchmark_filepath}"
+                                "${extra_flags}" 
                                   > "${output_filename}" 2>/dev/null)
     list(APPEND benchmark_outputs ${output_filename})
   endforeach()
