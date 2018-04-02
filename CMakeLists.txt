@@ -26,6 +26,31 @@ endif()
 #  message(STATUS "Found ${num_benchmarks} benchmarks.")
 #endif()
 
+# Collect useful groups of benchmarks/applications.
+# Just C benchmarks from MultiSource/Applications
+set(multisource_applications_c
+    "${BENCHMARKS_DIR}/MultiSource/Applications/sgefa/sgefa.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/aha/aha.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/lua/lua.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/ClamAV/clamscan.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/ALAC/encode/alacconvert-encode.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/ALAC/decode/alacconvert-decode.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/Burg/burg.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/lemon/lemon.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/oggenc/oggenc.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/JM/ldecod/ldecod.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/JM/lencod/lencod.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/treecc/treecc.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/sqlite3/sqlite3.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/obsequi/Obsequi.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/viterbi/viterbi.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/spiff/spiff.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/SPASS/SPASS.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/siod/siod.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/SIBsim4/SIBsim4.0.0.preopt.bc"
+    "${BENCHMARKS_DIR}/MultiSource/Applications/d/make_dparser.0.0.preopt.bc"
+    )
+
 # Use this function to create a new group of benchmarks to be run.
 # target_name: name of the target
 # benchmarks_filepaths: the benchmarks to run on. Use all_benchmarks to run on
