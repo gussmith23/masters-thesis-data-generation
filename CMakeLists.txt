@@ -51,6 +51,33 @@ set(multisource_applications_c
     "${BENCHMARKS_DIR}/MultiSource/Applications/d/make_dparser.0.0.preopt.bc"
     )
 
+# These application/benchmark groups were selected because they had the most
+# initial PIM patterns. It seems like a somewhat diverse sample, so i stuck with
+# it.
+set(multisource_applications_selected
+  "${BENCHMARKS_DIR}/MultiSource/Applications/JM/lencod/lencod.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Applications/ClamAV/clamscan.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Applications/oggenc/oggenc.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Applications/JM/ldecod/ldecod.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Applications/ALAC/decode/alacconvert-decode.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Applications/ALAC/encode/alacconvert-encode.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Applications/SIBsim4/SIBsim4.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Applications/sqlite3/sqlite3.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Applications/SPASS/SPASS.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Applications/obsequi/Obsequi.0.0.preopt.bc"
+  )
+set(multisource_benchmarks_selected
+  "${BENCHMARKS_DIR}/MultiSource/Benchmarks/7zip/7zip-benchmark.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Benchmarks/Prolangs-C/TimberWolfMC/timberwolfmc.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Benchmarks/ASCI_Purple/SMG2000/smg2000.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Benchmarks/MiBench/consumer-jpeg/consumer-jpeg.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Benchmarks/mediabench/jpeg/jpeg-6a/cjpeg.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Benchmarks/DOE-ProxyApps-C++/CLAMR/CLAMR.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Benchmarks/MallocBench/espresso/espresso.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Benchmarks/mafft/pairlocalalign.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Benchmarks/Prolangs-C/agrep/agrep.0.0.preopt.bc"
+  "${BENCHMARKS_DIR}/MultiSource/Benchmarks/MallocBench/gs/gs.0.0.preopt.bc"
+
 # Use this function to create a new group of benchmarks to be run.
 # target_name: name of the target
 # benchmarks_filepaths: the benchmarks to run on. Use all_benchmarks to run on
