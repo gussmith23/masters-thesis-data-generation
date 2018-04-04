@@ -77,6 +77,7 @@ set(multisource_benchmarks_selected
   "${BENCHMARKS_DIR}/MultiSource/Benchmarks/mafft/pairlocalalign.0.0.preopt.bc"
   "${BENCHMARKS_DIR}/MultiSource/Benchmarks/Prolangs-C/agrep/agrep.0.0.preopt.bc"
   "${BENCHMARKS_DIR}/MultiSource/Benchmarks/MallocBench/gs/gs.0.0.preopt.bc"
+  )
 
 # Use this function to create a new group of benchmarks to be run.
 # target_name: name of the target
