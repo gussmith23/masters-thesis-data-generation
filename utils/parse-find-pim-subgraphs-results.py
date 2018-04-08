@@ -188,3 +188,11 @@ for filename in sys.argv[1:]:
 ##set(["invoke","select","phi","call","fptosi","fptoui","ptrtoint","shl","srem","urem"]))
 #print("\nImmediate type histogram:")
 #print_histogram_latex(data, 'immediate_type_hist', top10)
+
+print("total num subgraphs")
+for name, _data in data.iteritems():
+    print(os.path.basename(name).split('.')[0] + '&' + str(_data[0]) + '\\\\')
+
+print("unique subgraph classes")
+for name, _data in data.iteritems():
+    print(os.path.basename(name).split('.')[0] + '&' + str(_data[1]) + '\\\\')

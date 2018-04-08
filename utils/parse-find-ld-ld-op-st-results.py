@@ -100,3 +100,9 @@ print_histogram_latex(data, 'operand_opcode_hist', top10)
 #set(["invoke","select","phi","call","fptosi","fptoui","ptrtoint","shl","srem","urem"]))
 print("\nImmediate type histogram:")
 print_histogram_latex(data, 'immediate_type_hist', top10)
+
+# Add a new basic histogram for just the total number of patterns
+for _, _data in data.iteritems():
+    _data['total_pat_hist'] = {'num patterns': sum([v for k,v in _data['opcode_hist'].iteritems()])}
+print("\nTotal patterns histogram:")
+print_histogram_latex(data,'total_pat_hist',top10)
