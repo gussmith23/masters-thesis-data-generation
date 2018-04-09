@@ -5,6 +5,7 @@ def parse_find_ld_ld_op_st_results(lines):
     opcode_hist_heading = "OPCODE HISTOGRAM"
     operand_opcode_hist_heading = "OPERAND OPCODE HISTOGRAM"
     immediate_type_hist_heading = "IMMEDIATE TYPE HISTOGRAM"
+    total_op_st_heading = "TOTAL OP-ST"
 
     # {opcode_name : count, ...}
     opcode_hist = {}
@@ -26,6 +27,10 @@ def parse_find_ld_ld_op_st_results(lines):
         split_str = l.strip().split('\t')
         opcode_hist[split_str[0]] = int(split_str[1])
         l = next(l_it)
+
+    while total_op_st_heading not in l: l = next(l_it)
+    l = next(l_it)
+    total_op_st = int(l)
     
     while operand_opcode_hist_heading not in l: l = next(l_it)
     l = next(l_it)
@@ -54,7 +59,8 @@ def parse_find_ld_ld_op_st_results(lines):
             'operand_opcode_hist' : operand_opcode_hist, 
             'one_immediate_operand' : one_immediate_operand,
             'two_immediate_operands' : two_immediate_operands, 
-            'immediate_type_hist' : immediate_type_hist }
+            'immediate_type_hist' : immediate_type_hist,
+            'total_op_st' : total_op_st}
 
 # histogram: either 'opcode_hist', 'operand_opcode_hist', or
 # 'immediate_type_hist'
@@ -101,8 +107,62 @@ print_histogram_latex(data, 'operand_opcode_hist', top10)
 print("\nImmediate type histogram:")
 print_histogram_latex(data, 'immediate_type_hist', top10)
 
+def getname(name): return os.path.basename(name).split('.')[0]
+
+# name : total
+totals = {}
+for filename, _data in data.iteritems():
+    totals[getname(filename)] = sum([v for _,v in _data['opcode_hist'].iteritems()])
+
 # Add a new basic histogram for just the total number of patterns
 for _, _data in data.iteritems():
     _data['total_pat_hist'] = {'num patterns': sum([v for k,v in _data['opcode_hist'].iteritems()])}
 print("\nTotal patterns histogram:")
 print_histogram_latex(data,'total_pat_hist',top10)
+
+# opcode hist v2
+# {instruction : { program_name : number}}
+opcode_hist_new = {}
+for filename, _data in data.iteritems():
+    name = getname(filename)
+    for instr, num in _data['opcode_hist'].iteritems():
+        if instr not in opcode_hist_new: opcode_hist_new[instr] = {}
+        opcode_hist_new[instr][name] = float(num)/totals[name]
+
+instructions_in_order = [
+        "add", "sub", "mul", "udiv", "sdiv", "urem", "srem", "fadd", "fsub",
+        "fmul", "fdiv", "frem", "shl", "lshr", "ashr", "and", "or", "xor",
+        "trunc", "fptrunc", "zext", "sext", "fptoui", "fptosi", "uitofp",
+        "sitofp", "ptrtoint", "inttoptr", "bitcast"
+        ]
+
+print("")
+
+columns = sorted(totals.keys(), key=lambda name: name.lower())
+print("&" + "&".join(columns) + "\\\\")
+for instr in instructions_in_order:
+    if instr not in opcode_hist_new: continue
+    _data = opcode_hist_new[instr]
+    print(instr + "&" + "&".join(["{0:.1f}".format(100*_data[column]) if column in _data else "" for column in columns]) + "\\\\")
+
+print("")
+
+# operand opcode hist v2
+operand_totals = {}
+for filename, _data in data.iteritems():
+    operand_totals[getname(filename)] = sum([v if k!="load" else 0 for k,v in _data['operand_opcode_hist'].iteritems()])
+operand_opcode_hist_new = {}
+for filename, _data in data.iteritems():
+    name = getname(filename)
+    for instr, num in _data['operand_opcode_hist'].iteritems():
+        if instr == "load": continue
+        if instr not in operand_opcode_hist_new: operand_opcode_hist_new[instr] = {}
+        operand_opcode_hist_new[instr][name] = float(num)/operand_totals[name]
+print("&" + "&".join(columns) + "\\\\")
+for instr in sorted(operand_opcode_hist_new.keys()):
+    _data = operand_opcode_hist_new[instr]
+    print(instr + "&" + "&".join(["{0:.1f}".format(100*_data[column]) if column in _data else "" for column in columns]) + "\\\\")
+
+print("\nTotal op-st:\n")
+for filename, _data in data.iteritems():
+    print(getname(filename) + "&" + str(_data['total_op_st']) + "\\\\")

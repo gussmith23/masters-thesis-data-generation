@@ -79,7 +79,7 @@ def parse_find_pim_subgraphs(graph_dir_name, lines):
         subgraph += l # add the brace
 
         echo_subproc = subprocess.Popen(('echo',subgraph), stdout=subprocess.PIPE)
-        with open(os.path.join(graph_dir_name,"subgraph_class_by_num_isntances_" + str(num) + "_ct_" + str(count) + ".png"), "wb") as f:
+        with open(os.path.join(graph_dir_name,"subgraph_class_by_num_instances_" + "{0:04d}".format(num) + "_ct_" + str(count) + ".png"), "wb") as f:
             subprocess.call(('dot','-Tpng'), stdin = echo_subproc.stdout, stdout=f)
 
         num +=1
@@ -102,7 +102,7 @@ def parse_find_pim_subgraphs(graph_dir_name, lines):
         subgraph += l # add the brace
 
         echo_subproc = subprocess.Popen(('echo',subgraph), stdout=subprocess.PIPE)
-        with open(os.path.join(graph_dir_name,"subgraph_class_by_sg_size_" + str(num) + "_ct_" + str(count) + ".png"), "wb") as f:
+        with open(os.path.join(graph_dir_name,"subgraph_class_by_sg_size_" + "{0:04}".format(num) + "_ct_" + str(count) + ".png"), "wb") as f:
             subprocess.call(('dot','-Tpng'), stdin = echo_subproc.stdout, stdout=f)
 
         num += 1
